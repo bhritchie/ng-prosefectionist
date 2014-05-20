@@ -1,0 +1,11 @@
+article
+	h2 {{post.title}}
+	p(ng-bind-html="post.body | markdown")
+	//p(ng-bind-html) {{post.body | markdown}}
+	time(datetime="{{post.date | date:'yyyy-MM-dd'}}", pubdate) {{post.date | date:'MMMM d, y'}}
+
+h4 Admin Tools
+
+ul#adminposttools
+	li: a#editpost(href="" ng-click="edit()") Edit Post
+	li: a#deletepost(href="" ng-click="delete()") Delete Post

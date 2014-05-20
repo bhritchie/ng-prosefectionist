@@ -1,0 +1,11 @@
+h2 New Blog Post
+form(ng-submit="save()")
+	p
+		label Title
+		input(autofocus required ng-model="newpost.title")
+	p
+		label Body (posts may be formatted with <a href="http://daringfireball.net/projects/markdown/basics"> Markdown</a>).
+		textarea(required rows='10', cols='52', name='body', ng-model="newpost.body")
+	p
+		button(ng-click="cancel()") Cancel
+		button() Save

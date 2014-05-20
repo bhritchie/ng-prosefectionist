@@ -1,0 +1,368 @@
+/*
+FOR DEV
+@import url(http://fonts.googleapis.com/css?family=Gentium+Basic:400,400italic);
+*/
+
+/*Create variable for standard font sizes, standard colors, etc*/
+
+@serif: 'Gentium Basic', 'Times New Roman', Georgia, serif;
+@sans: Helvetica, Arial, sans-serif;
+
+* {
+margin:0; /* zero out margin */
+padding:0; /* zero out padding */
+}
+
+div.clear {clear: both;}
+
+html, body {
+	height:100%; /* gives layout 100% height */
+	overflow:inherit; /* triggers 100% height in Opera 9.5 */
+	/*font-family:@serif,'Times New Roman',Georgia,Times,serif; */
+}
+#wrapper {
+min-height:100%; /* gives layout 100% height */
+}
+* html #wrapper { 
+height:100%; /* IE6 treats height as min-height */
+width:100%;
+}
+
+body {
+background:#fefcf6 none repeat scroll 0%;  
+line-height:1.3;  
+font-size: 14px;  
+font-family:@sans;  
+margin:0pt;  
+height:100%;  
+width:100%;
+border-bottom: 0px solid #000000;
+} 
+
+/*FOR ALT BG COLOR TRY #FDFCF6*/
+
+img {margin: 5px;}
+
+.logoimage { margin: 0px; }
+
+a {color: #800000; text-decoration: none;}
+
+a:hover {color: #300000; text-decoration: none;}
+
+#container {width:500px; margin-left:auto; margin-right: auto; padding-top: 100px;  padding-bottom: 20px;}
+
+#containerinner {width:500px; margin-left:auto; margin-right: auto; padding-top: 40px;  padding-bottom: 20px;}
+
+#header {width: 300px; margin-top: 0px; margin-left:auto; margin-right: auto; text-align: center;}
+
+#content {width: 450px; margin-top: 40px; margin-bottom: 40px; margin-left:auto; margin-right: auto;}
+
+p {margin: 7px 0px;
+	line-height: 1.4;
+}
+
+ul { list-style-type: disc; line-height:1.4; font-size: 14px; margin: 7px 25px; }
+
+li { margin: 7px 0px; }
+
+
+h2 {font-size: 22px; text-transform: uppercase; margin-top: 25px; border-bottom: 1px dotted #800000; margin-bottom: 10px; font-weight: normal; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.1;}
+
+blockquote {color: #565656; margin-left: 20px; border-left: 1px dotted #434343; padding-left: 5px;}
+
+
+
+#menu { position: absolute;
+	top: 10px;
+	right: 15px;
+	font-size: 10px;
+	text-transform: uppercase;
+	/*border-bottom: 1px dotted #800000;*/
+	/*width: 100%;*/
+	}
+
+#menu a {
+	border-bottom: 1px dotted #800000;
+}
+
+
+
+#pagenav {
+	width: 100%;
+	clear: both;
+	/*padding: 7px 15px;*/
+	margin: 30px 0px 0px 0px;
+	text-align: right;
+}
+
+#pagenav a {
+	font-size: 16px;
+	text-transform: uppercase;
+	/*margin-top: 25px;*/
+	font-weight: normal;
+	font-family:@serif,'Times New Roman',Georgia,Times,serif;
+	line-height: 1.2;
+	}
+
+#prevlink {
+  float: left;
+}
+
+
+
+
+
+/*HEADER STYLING*/
+
+/*header {font-size: 24px; font-variant: small-caps; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3;}*/
+
+.sitename {
+	font-family:@serif,'Times New Roman',Georgia,Times,serif;
+	line-height: 1.3;
+	font-size: 28px;
+	font-style: italic;
+}
+
+.initial {font-size: 32px; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3;}
+
+.titlecaps {font-size: 24px; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3;}
+
+.titleit {font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3; font-size: 24px; font-style: italic;}
+
+.initialinner {font-size: 24px; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3;}
+
+
+.titlecapsinner {font-size: 18px; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3;}
+
+.titleitinner {font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.3; font-size: 18px; font-style: italic;}
+
+
+
+header a:hover {color: #300000; text-decoration: none;}
+
+/*original font color: #434343*/
+#tag {font-size: 12px; margin-top: -4px; color: #232323; font-variant: normal; text-transform: uppercase; font-family:@serif,'Times New Roman',Georgia,Times,serif; line-height: 1.1;}
+
+nav {
+	margin-top: 15px;
+	margin-bottom: -10px;
+}
+
+nav ul {
+	font-size: 20px;
+	list-style: none;
+	display: inline;
+	font-variant: small-caps;
+	/*font-style: italic;*/
+	/*text-transform: uppercase;*/
+	font-family:@serif,'Times New Roman',Georgia,Times,serif;
+	line-height: 1.1;
+}
+
+nav ul li {
+	display: inline;	
+}
+
+nav ul li:after {
+	content: '\00a0\00a0\00a0';
+}
+
+nav ul li:last-child:after {
+	content: '';
+}
+
+#blogtag {font-size: 14px; margin: 0 0; color: #434343; font-variant: normal; font-style: italic;}
+
+h3 {font-size: 16px; text-transform: uppercase; margin-top: 25px; font-weight: normal; font-family:@serif; line-height: 1.2;}
+
+
+h4 {font-size: 16px; text-transform: uppercase; margin-top: 15px; font-weight: normal; border-bottom: 1px dotted #434343; font-family:@serif; line-height: 1.2;}
+
+
+#comments h4 {font-size: 16px; text-transform: uppercase; margin-top: 20px; margin-bottom: 10px; font-weight: normal; border-bottom: 1px dotted #434343; font-family:@serif; line-height: 1.2; color: #232323;
+}
+
+.commenter {
+	margin-top: 12px;
+	margin-bottom: 0px;
+	font-size: 11px;
+	color: #454545;
+	font-style: italic;
+	line-height: 1.1;
+}
+
+/*FIND A GOOD ADMIN COLOR AND MAYBE UNIFY THE PADDING WITH NON-ADMIN*/
+
+.commenter.admin {
+	color: #fefcf6;
+	background-color: #898989;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.commentbody {
+	margin-top: 0px;
+	padding-top: 1px;
+	line-height: 1.1;
+	font-size: 12px;
+	color: #121212;
+}
+
+.commentbody.admin {
+	color: #fefcf6;
+	background-color: #898989;
+	padding: 0px 5px 5px 5px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+
+.commenter.newcomment {
+	color: #fefcf6;
+	background-color: #800000;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.commentbody.newcomment {
+	color: #fefcf6;
+	background-color: #800000;
+	padding: 0px 5px 5px 5px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#commentform {
+	/*color: #fefcf6;*/
+	margin-top: 15px;
+	/*background-color: #eeeeee;*/
+	background-color: #edebe5;
+	padding: 2px 10px 2px 10px;
+	border-radius: 10px;
+	border: 1px solid #dcdad4;
+	/*border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;*/
+}
+
+#commentform p {
+	line-height: 1.1;
+	font-size: 12px;
+}
+
+
+#commentlink {
+	font-size: 12px;
+	text-align: right;
+	text-transform: uppercase;
+	font-family:@serif;
+}
+
+.admincommenttools {
+	text-align: left;
+	font-size: 10px;
+	margin-top: -5px;
+}
+
+#adminposttools {
+	text-indent: 10px;
+	padding-left: 0px;
+	margin-left: 0px;
+	list-style: none;
+}
+
+#adminposttools li:before {
+	content: "» ";
+}
+
+
+.postdatetop {
+	font-size: 10px;
+	text-transform: uppercase; 
+	margin-top: -10px;
+	/*padding-top: 1px;*/
+	font-weight: normal;
+	/*border-top: 1px dotted #434343;*/
+	font-family:@serif;
+	/*line-height: 1.2;*/
+	text-align: right; 
+}
+
+.postdatebottom {
+	font-size: 11px;
+	text-transform: uppercase; 
+	margin-top: 5px;
+	/*padding-top: 1px;*/
+	font-weight: normal;
+	/*border-top: 1px dotted #434343;*/
+	color: #434343;
+	font-family:@serif;
+	/*line-height: 1.2;*/
+	text-align: right; 
+}
+
+
+time {
+	font-size: 13px;
+	text-transform: uppercase; 
+	margin-top: 5px;
+	font-weight: normal;
+	color: #434343;
+	font-family:@serif;
+	text-align: right; 
+}
+
+
+/*
+.newcommentdiv {
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+*/
+
+.validationalert {
+	color: #d00000;
+	font-weight: bold;
+}
+
+.hidden {
+	display: none;
+}
+
+/*FOR FUTURE USE
+#systemmessage {
+	position: absolute;
+	top: 0px;
+	width: 250px;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font-size: 10px;
+	text-transform: uppercase;
+	color: #fefcf6;
+	line-height: 1;
+	padding: 5px;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	background-color: #800000;
+}
+
+#systemmessage p {
+	line-height: 1;
+	margin: 0;
+	padding: 0;
+}
+*/
+
+footer { font-style: italic; color: #757575; text-align: right; clear: both; border-top: 1px dotted #800000; margin-top:20px; margin-bottom: 20px;}
+
+footer p {margin: 5px; font-size: 9px; }

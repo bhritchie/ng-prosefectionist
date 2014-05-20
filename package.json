@@ -1,0 +1,13 @@
+{
+	"name": "prosefectionist",
+	"main": "server.js",
+	"dependencies": {
+		"express": "*",
+		"mongoose": "*",
+		"morgan": "*",
+		"jade": "*",
+		"monk": "*",
+		"body-parser": "*",
+		"feed": "*"
+	}
+}
