@@ -1,0 +1,17 @@
+h2 New Page
+form(ng-submit="save()")
+	p
+		label Short Name
+		input(autofocus, required, ng-model="newpage.shortname")
+	p
+		label Long Name
+		input(required, ng-model="newpage.longname")
+	p
+		label Sequence
+		input(type="number", required, ng-model="newpage.sequence")
+	p
+		label Body (posts may be formatted with <a href="http://daringfireball.net/projects/markdown/basics"> Markdown</a>).
+		textarea(required rows='10', cols='52', name='body', ng-model="newpage.body")
+	p
+		button(ng-click="cancel()") Cancel
+		button() Save

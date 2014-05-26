@@ -21,11 +21,13 @@ html(lang="en", ng-app="PF")
 						<br>
 						a(href='/')!= sitename
 
-						#tag= sitetag
+						p#tag= sitetag
 
-						nav
-							ul
-								li(ng-repeat="title in pageTitles")
-									a(href="#/page/{{title._id}}") {{title.shortname}}
+						if (pages.length > 0)
+							nav
+								ul
+									for title in pages
+										li: a(href="#/page/#{title._id}")= title.shortname
+
 
 				#content(ng-view)

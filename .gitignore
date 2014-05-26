@@ -1,0 +1,14 @@
+node_modules
+public/libs
+.tmp
+.sass-cache
+app/bower_components
+heroku
+dist
+config
+bower.json
+.jshintrc
+.travis.yml
+.bowerrc
+.editorconfig
+

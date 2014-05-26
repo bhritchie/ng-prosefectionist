@@ -2,7 +2,26 @@ article
 	h2 {{post.title}}
 	p(ng-bind-html="post.body | markdown")
 	//p(ng-bind-html) {{post.body | markdown}}
-	time(datetime="{{post.date | date:'yyyy-MM-dd'}}", pubdate) {{post.date | date:'MMMM d, y'}}
+	time(datetime="{{post.date | date: 'yyyy-MM-dd'}}", pubdate) {{post.date | date: 'MMMM d, y'}}
+
+#comments
+	h4 Comments
+
+	//improve date - maybe Name at Time on Date
+
+
+	.comment(ng-repeat="comment in comments")
+		p.commenter {{comment.name}} at {{comment.date | date: 'h:ma'}} on {{comment.date | date: 'MMMM d, y'}}
+		p.commentbody {{comment.comment}}
+		p.admincommenttools
+			a.editcomment(href="" ng-click="editComment($index)") Edit 
+			| | 
+			a.deletecomment(href="" ng-click="deleteComment($index)") Delete
+
+	#commentform
+
+		p COMMENT FORM HERE
+
 
 h4 Admin Tools
 

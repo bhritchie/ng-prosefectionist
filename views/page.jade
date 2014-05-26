@@ -1,0 +1,11 @@
+article
+	h2 {{page.longname}}
+	//p.postdatetop #{postdate}
+	p(ng-bind-html="page.body | markdown")
+	//p.postdatebottom #{pagedate}
+
+h4 Admin Tools
+
+ul#adminposttools
+	li: a#editpost(href="" ng-click="edit()") Edit Page
+	li: a#deletepost(href="" ng-click="delete()") Delete Page

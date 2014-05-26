@@ -1,11 +1,13 @@
-//For Saturday, May 10th:
 //- Just using standard $cacheFactory - would prefer something smarter
+	//chache doesn't really work - updated posts are not reflected until reload
 //loading indicator ("butterbar")
 //system messages
 //pages
 //comments
 //login
 //admin functions
+
+//issue: going back from an individual post always takes you to first page of posts	
 
 
 var PF = angular.module('PF', ['ngRoute', 'ngResource']);
@@ -23,10 +25,13 @@ PF.filter('markdown', function ($sce) {
 
 
 //Preload and cache all html templates for better responsiveness
+//might remove some of the form templates since only admin needs them
 PF.run(function ($templateCache, $http) {
 	$http.get('hometpl', { cache: $templateCache });
 	$http.get('formtpl', { cache: $templateCache });
 	$http.get('posttpl', { cache: $templateCache });
+	$http.get('pagetpl', { cache: $templateCache });
+	$http.get('pageformtpl', { cache: $templateCache });
 });
 
 
@@ -61,6 +66,23 @@ function postRouteConfig($routeProvider) {
 	when('/edit/:id', {
 		controller: EditController,
 		templateUrl: 'formtpl'
+	}).
+	when('/page/:id', {
+		controller: PageController,
+		templateUrl: 'pagetpl',
+		resolve: {
+			page: function(SinglePageLoader) {
+				return SinglePageLoader();
+			}
+		}
+	}).	
+	when('/newpage', {
+		controller: NewPageController,
+		templateUrl: 'pageformtpl'
+	}).
+	when('/editpage/:id', {
+		controller: EditPageController,
+		templateUrl: 'pageformtpl'
 	}).
 	otherwise({
 		redirectTo: '/'
@@ -164,6 +186,41 @@ function HomeController($scope, posts) {
 */
 
 
+//POST CONTROLLERS
+//Do I need to be injecting BlogPosts here?
+function PostController($scope, $routeParams, $location, post, BlogPosts, Comments) {
+	$scope.post = post;
+
+	//for this need to inject BlogPosts
+	//$scope.post = BlogPosts.get({postId: $routeParams.id});
+
+	$scope.edit = function() {
+		$location.path('/edit/' + $routeParams.id);
+	}
+
+	$scope.delete = function() {
+		BlogPosts.remove({postId: $routeParams.id});
+		$location.path('/');
+	}
+
+	//COMMENT HANDLING
+	//get all comments for the post
+	$scope.comments = Comments.query({postId: $routeParams.id});
+
+	//This works but need to smooth out the reload - shouldn't really need to reload all the comments either
+	$scope.deleteComment = function(commentIndex) {
+		Comments.remove({postId: $routeParams.id, commentId: $scope.comments[commentIndex]._id});
+		$scope.comments = Comments.query({postId: $routeParams.id});
+	}
+
+	$scope.editComment = function(commentIndex) {
+		//comment editing not implemented yet
+		//might need a subcontroller here
+	}
+	
+}
+
+//Issue: new posts are not reflected until full refresh: force refresh or turn off caching or make it smarter
 function NewController($scope, $location, BlogPosts) {
 
 	$scope.newpost = new BlogPosts();
@@ -177,10 +234,9 @@ function NewController($scope, $location, BlogPosts) {
 	$scope.cancel = function () {
 		$location.path('/');
 	}
-
 }
 
-
+//Issue: edits are not reflected until full refresh: force refresh or turn off caching or make it smarter
 function EditController($scope, $location, BlogPosts, $routeParams) {
 	$scope.newpost = BlogPosts.get({postId: $routeParams.id});
 
@@ -196,23 +252,57 @@ function EditController($scope, $location, BlogPosts, $routeParams) {
 }
 
 
-function PostController($scope, $routeParams, $location, post, BlogPosts) {
-	$scope.post = post;
 
-	//for this need to inject BlogPosts
-	//$scope.post = BlogPosts.get({postId: $routeParams.id});
+//PAGE CONTROLLERS
+
+function PageController($scope, $routeParams, $location, page, BlogPage) {
+	$scope.page = page;
 
 	$scope.edit = function() {
-		$location.path('/edit/' + $routeParams.id);
+		$location.path('/editpage/' + $routeParams.id);
 	}
 
 	$scope.delete = function() {
-		BlogPosts.remove({postId: $routeParams.id});
+		BlogPage.remove({pageId: $routeParams.id});
 		$location.path('/');
 	}
 }
 
+//Issue: nav section doesn't reflect new pages until reload - either force reload or make nav more dynamic
+function NewPageController($scope, $location, BlogPage) {
 
+	$scope.newpage = new BlogPage();
+
+	$scope.save = function () {
+		$scope.newpage.$save().then(function(data) {
+			$location.path('/page/' + data._id);
+		});
+	}
+
+	$scope.cancel = function () {
+		$location.path('/');
+	}
+}
+
+//Issue: edits are not reflected until full refresh: force refresh or turn off caching or make it smarter
+function EditPageController($scope, $location, BlogPage, $routeParams) {
+
+	$scope.newpage = BlogPage.get({pageId: $routeParams.id});
+
+	$scope.cancel = function () {
+		$location.path('/page/' + $routeParams.id);
+	}
+
+	$scope.save = function () {
+		$scope.newpage.$save().then(function(data) {
+			$location.path('/page/' + $routeParams.id);
+		});
+	}
+}
+
+
+
+//POST LOADING
 PF.factory('MultiPostLoader', ['BlogPosts', '$q', function(BlogPosts, $q) {
 	return function() {
 		var delay = $q.defer();
@@ -237,6 +327,23 @@ PF.factory('SinglePostLoader', ['BlogPosts', '$route', '$q', function(BlogPosts,
 		return delay.promise;
 	};
 }]);
+
+
+
+//PAGE LOADING
+PF.factory('SinglePageLoader', ['BlogPage', '$route', '$q', function(BlogPage, $route, $q) {
+	return function() {
+		var delay = $q.defer();
+		//BlogPage.get({postId: $route.current.params.postId}, function(posts) {
+		BlogPage.get({pageId: $route.current.params.id}, function(page) {
+			delay.resolve(page);
+		}, function() {
+			delay.reject('Unable to fetch page.');
+		});
+		return delay.promise;
+	};
+}]);
+
 
 /*
 PF.factory('PageTitlesLoader', ['$http', '$q', function($http, $q) {
@@ -271,10 +378,26 @@ PF.factory('BlogPosts', ['$resource', '$cacheFactory', function($resource, $cach
 }]);
 */
 
+//Post $resource
 PF.factory('BlogPosts', function($resource, $cacheFactory) {
 	return $resource('/post/:postId', {postId: '@_id'}, {
 		get: { method: 'GET', cache: $cacheFactory},
 		query: { method: 'GET', cache: $cacheFactory, isArray: true }
+	});
+});
+
+//Page $resource
+PF.factory('BlogPage', function($resource, $cacheFactory) {
+	return $resource('/page/:pageId', {pageId: '@_id'}, {
+		get: { method: 'GET', cache: $cacheFactory}
+	});
+});
+
+//Post comments $resource
+PF.factory('Comments', function($resource, $cacheFactory) {
+	return $resource('/post/:postId/comment/:commentId', {postId: '@postID', commentId: '@_id'}, {
+		//not caching coments currently
+		//get: { method: 'GET', cache: $cacheFactory}
 	});
 });
 
