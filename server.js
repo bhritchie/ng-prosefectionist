@@ -296,7 +296,7 @@ app.delete('/page/:id', function (req, res) {
 //Send all comments for a post
 app.get('/post/:postid/comment', function (req, res) {
 	var comments = db.get('comments');
-	comments.find({post: req.params.postid}, {sort: {date: -1}}, function (error, comments) {
+	comments.find({post: req.params.postid}, {sort: {date: 1}}, function (error, comments) {
 		//console.log(comments);
 		res.json(comments);
 	});
@@ -312,22 +312,26 @@ app.get('/post/:postid/comment/:id', function (req, res) {
 });
 
 //Create new comment and return it
-app.post('/post/:postid/comment/:id', function (req, res) {
+app.post('/post/:postid/comment', function (req, res) {
 	var comments = db.get('comments');
 
-	//Using admin: false until I set up authorization
-	comments.insert({
+	var newcomment = {
 		'post': req.params.postid,
-		'admin': false,
+		'admin': req.body.admin,
 		'name': req.body.name,
-		'email': req.body.email,		
+		//'email': req.body.email,		
 		'comment': req.body.comment,
 		'date': new Date()
+	}
 
-		}, function (error, comment) {
+	//console.log(newcomment);
+
+	
+	comments.insert(newcomment, function (error, comment) {
 			//handle error as well
 			res.json(comment);
 		});
+	
 });
 
 //Edit a comment and return it

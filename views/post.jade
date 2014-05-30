@@ -20,7 +20,21 @@ article
 
 	#commentform
 
-		p COMMENT FORM HERE
+		form#leavecomment(ng-submit="saveComment()")
+
+			input(type='hidden', name='admin', ng-model="newcomment.admin")
+
+			p: label#namelabel(for="namefield") Name (required):
+
+			p: input#namefield(type="text", name="name", required, ng-model="newcomment.name", value="a name")
+
+			p: label#commentlabel(for="commentfield") Comment (required):
+
+			p: textarea#commentfield(rows="5", cols="52", name="comment", required, ng-model="newcomment.comment")
+
+			p
+				button(ng-click="cancelComment()") Cancel
+				button() Save
 
 
 h4 Admin Tools

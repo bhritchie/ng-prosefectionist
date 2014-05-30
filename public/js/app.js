@@ -1,13 +1,3 @@
-//- Just using standard $cacheFactory - would prefer something smarter
-	//chache doesn't really work - updated posts are not reflected until reload
-//loading indicator ("butterbar")
-//system messages
-//pages
-//comments
-//login
-//admin functions
-
-//issue: going back from an individual post always takes you to first page of posts	
 
 
 var PF = angular.module('PF', ['ngRoute', 'ngResource']);
@@ -209,14 +199,42 @@ function PostController($scope, $routeParams, $location, post, BlogPosts, Commen
 
 	//This works but need to smooth out the reload - shouldn't really need to reload all the comments either
 	$scope.deleteComment = function(commentIndex) {
-		Comments.remove({postId: $routeParams.id, commentId: $scope.comments[commentIndex]._id});
-		$scope.comments = Comments.query({postId: $routeParams.id});
+		commentId = $scope.comments[commentIndex]._id;
+		console.log(commentId);
+		Comments.remove({postId: $routeParams.id, commentId: commentId});
+		//I would like this to respond to server confimration but not sure how to add a call back to remove
+		$scope.comments = $scope.comments.filter(function(object){return object._id !== commentId});
+		//$scope.comments = Comments.query({postId: $routeParams.id});
 	}
 
 	$scope.editComment = function(commentIndex) {
 		//comment editing not implemented yet
 		//might need a subcontroller here
 	}
+
+	initiateComment = function () {
+		$scope.newcomment = new Comments();
+		$scope.newcomment.admin = false;
+		//set this when creating the comment?
+		$scope.newcomment.postId = $routeParams.id;
+	}
+	
+	$scope.saveComment = function() {
+		//console.log($scope.newcomment);
+		$scope.newcomment.$save().then(function(data) {
+			//console.log(data);
+			//animate this:
+			$scope.comments.push(data);
+			initiateComment();
+		});
+	}
+
+	//add cancelComment
+	//$scope.cancelComment() {
+		//
+	//}
+
+	initiateComment();
 	
 }
 
@@ -395,7 +413,7 @@ PF.factory('BlogPage', function($resource, $cacheFactory) {
 
 //Post comments $resource
 PF.factory('Comments', function($resource, $cacheFactory) {
-	return $resource('/post/:postId/comment/:commentId', {postId: '@postID', commentId: '@_id'}, {
+	return $resource('/post/:postId/comment/:commentId', {postId: '@postId', commentId: '@_id'}, {
 		//not caching coments currently
 		//get: { method: 'GET', cache: $cacheFactory}
 	});
