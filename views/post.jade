@@ -13,7 +13,7 @@ article
 	.comment(ng-repeat="comment in comments")
 		p.commenter {{comment.name}} at {{comment.date | date: 'h:ma'}} on {{comment.date | date: 'MMMM d, y'}}
 		p.commentbody {{comment.comment}}
-		p.admincommenttools
+		p.admincommenttools(ng-if="authorized")
 			a.editcomment(href="" ng-click="editComment($index)") Edit 
 			| | 
 			a.deletecomment(href="" ng-click="deleteComment($index)") Delete
@@ -36,9 +36,9 @@ article
 				button(ng-click="cancelComment()") Cancel
 				button() Save
 
+div(ng-if="authorized")
+	h4 Admin Tools
 
-h4 Admin Tools
-
-ul#adminposttools
-	li: a#editpost(href="" ng-click="edit()") Edit Post
-	li: a#deletepost(href="" ng-click="delete()") Delete Post
+	ul#adminposttools
+		li: a#editpost(href="" ng-click="edit()") Edit Post
+		li: a#deletepost(href="" ng-click="delete()") Delete Post

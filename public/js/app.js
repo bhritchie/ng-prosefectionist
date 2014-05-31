@@ -1,9 +1,10 @@
+//app.js
 
+//Define app
+var PF = angular.module('PF', ['ngRoute', 'ngResource', 'ngAnimate']);
 
-var PF = angular.module('PF', ['ngRoute', 'ngResource']);
-
-//This filter allows for posts and pages to be composed with Markdown
-//uses showdown https://github.com/coreyti/showdown
+//Filter to allow post and page compositon with Markdown
+//Uses showdown: https://github.com/coreyti/showdown
 PF.filter('markdown', function ($sce) {
     var converter = new Showdown.converter();
     return function (value) {
@@ -13,15 +14,16 @@ PF.filter('markdown', function ($sce) {
 });
 
 
-
 //Preload and cache all html templates for better responsiveness
-//might remove some of the form templates since only admin needs them
+//Will change so admin-only templates are not loaded unless required
+//Probably will concatenate these eventually or load them all in a separate module
 PF.run(function ($templateCache, $http) {
 	$http.get('hometpl', { cache: $templateCache });
 	$http.get('formtpl', { cache: $templateCache });
 	$http.get('posttpl', { cache: $templateCache });
 	$http.get('pagetpl', { cache: $templateCache });
 	$http.get('pageformtpl', { cache: $templateCache });
+	$http.get('logintpl', { cache: $templateCache });
 });
 
 
@@ -51,11 +53,13 @@ function postRouteConfig($routeProvider) {
 	}).
 	when('/newpost', {
 		controller: NewController,
-		templateUrl: 'formtpl'
+		templateUrl: 'formtpl',
+		requireAdmin: true,
 	}).
 	when('/edit/:id', {
 		controller: EditController,
-		templateUrl: 'formtpl'
+		templateUrl: 'formtpl',
+		requireAdmin: true
 	}).
 	when('/page/:id', {
 		controller: PageController,
@@ -68,38 +72,106 @@ function postRouteConfig($routeProvider) {
 	}).	
 	when('/newpage', {
 		controller: NewPageController,
-		templateUrl: 'pageformtpl'
+		templateUrl: 'pageformtpl',
+		requireAdmin: true
 	}).
 	when('/editpage/:id', {
 		controller: EditPageController,
-		templateUrl: 'pageformtpl'
+		templateUrl: 'pageformtpl',
+		requireAdmin: true
+	}).
+	when('/login', {
+		controller: LoginController,
+		templateUrl: 'logintpl'
+	}).
+	when('/admin', {
+		//cache it when loaded
+		controller: AdminController,
+		templateUrl: 'admintpl',
+		requireAdmin: true
 	}).
 	otherwise({
 		redirectTo: '/'
 	});
 }
 
-
 //Configure app with routes configured above
 PF.config(postRouteConfig);
 
 
-//should use the .controller form for my controllers
 
 
+//Authentication handling
+//This is basic, but server does own authentication on routes as well
 
-/*
-//WHERE DO I PUT THIS? IT DOES NOT BELONG IN ANY OF THE CONTROLLERS
-var loadTitles = function() {
-	$http.get('/pagetitles', {cache: true}).success(function(titles) {
-		//console.log(titles)
-		$scope.pageTitles = titles;
+//On route change, check whether user is logged in
+//ISSUE: TEMPLATE FLASHES IN BEFORE SECURITY CHECK IS FINISHED - see http://stackoverflow.com/questions/17978990/angularjs-need-some-combination-of-routechangestart-and-locationchangestart
+PF.run(function ($rootScope, $location, $route) {
+	$rootScope.$on('$routeChangeStart', function (event, next) {
+		if (next.requireAdmin) {
+			if (!sessionStorage.getItem("admin")) {
+				//event.preventDefault(); //this only works on locationChangeStart
+				//PRESENT A MESSAGE HERE AS WELL
+				$location.path('/login');
+			}
+		}
 	});
+});
+
+//Certain page elements need to check logged in status as well
+loggedIn = function() {
+	if (sessionStorage.getItem("admin")) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
-loadTitles();
-*/
 
 
+//BEGN CONTROLLERS
+//Eventually will use the .controller syntax
+
+function AdminController($scope, $http, $location) {
+	//IMPLEMENT ARCHIVE
+	
+	//ISSUE: NG-CLICK DOESN'T GIVE A VISUAL POINTER ON HOVER
+	$scope.logout = function() {
+		$http.get('/logout');
+		sessionStorage.removeItem("admin");
+		$location.path('/');
+	}
+}
+
+function LoginController($scope, $http, $location) {
+	//STYLE NEEDS TO BE CLEANED UP QUITE A BIT
+
+	$scope.credentials = {
+		username: '',
+		password: ''
+	};
+
+	$scope.warning = '';
+
+	//Hitting enter should fire this, not cancel()
+	$scope.login = function() {
+
+		$http.post('/login', $scope.credentials).
+			success(function(data, status, headers, config) {
+				//DISPLAY SYSTEM MESSAGE WITH REDIRECT
+				sessionStorage.setItem("admin", true);
+				$location.path('/admin');
+			}).
+			error(function(data, status, headers, config) {
+				//Crude warning mechanism:
+				$scope.warning = status + ': ' + data;
+			});
+	}
+
+	$scope.cancel = function() {
+		$location.path('/');
+	}
+}
 
 //Implement paging myself
 function HomeController($scope, $http, $window) {
@@ -176,6 +248,7 @@ function HomeController($scope, posts) {
 */
 
 
+
 //POST CONTROLLERS
 //Do I need to be injecting BlogPosts here?
 function PostController($scope, $routeParams, $location, post, BlogPosts, Comments) {
@@ -203,6 +276,7 @@ function PostController($scope, $routeParams, $location, post, BlogPosts, Commen
 		console.log(commentId);
 		Comments.remove({postId: $routeParams.id, commentId: commentId});
 		//I would like this to respond to server confimration but not sure how to add a call back to remove
+		//ANIMATE THIS
 		$scope.comments = $scope.comments.filter(function(object){return object._id !== commentId});
 		//$scope.comments = Comments.query({postId: $routeParams.id});
 	}
@@ -223,18 +297,21 @@ function PostController($scope, $routeParams, $location, post, BlogPosts, Commen
 		//console.log($scope.newcomment);
 		$scope.newcomment.$save().then(function(data) {
 			//console.log(data);
-			//animate this:
+			//ANIMATE THIS:
 			$scope.comments.push(data);
 			initiateComment();
 		});
 	}
 
 	//add cancelComment
-	//$scope.cancelComment() {
-		//
-	//}
+	$scope.cancelComment = function() {
+		//HAVE TO PREVENT VALIDATION WARNING - PREVENTDAFAULT OR DO MY OWN VALIDATIONs
+		initiateComment();
+	}
 
 	initiateComment();
+
+	$scope.authorized = loggedIn();
 	
 }
 
@@ -284,6 +361,8 @@ function PageController($scope, $routeParams, $location, page, BlogPage) {
 		BlogPage.remove({pageId: $routeParams.id});
 		$location.path('/');
 	}
+
+	$scope.authorized = loggedIn();
 }
 
 //Issue: nav section doesn't reflect new pages until reload - either force reload or make nav more dynamic
@@ -603,6 +682,19 @@ PF.FetchPosts = {
 };
 */
 
+
+
+/*
+//WHERE DO I PUT THIS? IT DOES NOT BELONG IN ANY OF THE CONTROLLERS
+//currently loading directly as part of main template
+var loadTitles = function() {
+	$http.get('/pagetitles', {cache: true}).success(function(titles) {
+		//console.log(titles)
+		$scope.pageTitles = titles;
+	});
+}
+loadTitles();
+*/
 
 
 

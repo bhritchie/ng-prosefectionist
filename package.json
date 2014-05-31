@@ -8,6 +8,9 @@
 		"jade": "*",
 		"monk": "*",
 		"body-parser": "*",
-		"feed": "*"
+		"feed": "*",
+		"express-session": "*",
+		"connect-mongo": "*",
+		"cookie-parser": "*"
 	}
 }

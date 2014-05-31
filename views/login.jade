@@ -1,0 +1,13 @@
+h2 Log in
+form(ng-submit="login()")
+	p
+		label(for="username") Name
+		input(ng-model="credentials.username", id="username", type="text", autofocus, required)
+	p
+		label(for="password") Password
+		input(ng-model="credentials.password", id="password", type="password", required)
+	p
+		span {{warning}}
+	p
+		button(ng-click="cancel()") Cancel
+		button() Log In
