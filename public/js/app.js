@@ -184,6 +184,8 @@ function HomeController($scope, $http, $window) {
 
 	//$scope.posts = BlogPosts.query();
 
+	$window.scrollTo(0,0);
+
 	//need to control for fact that there may not be a next or previous page
 	//caching is on but probably won't know about saves and edits - would have to clear it
 	//jumps to top of page after pagechange but maybe icon should be shrunk a bit.
@@ -229,8 +231,11 @@ function HomeController($scope, $http, $window) {
 
 //POST CONTROLLERS
 //Do I need to be injecting BlogPosts here?
-function PostController($scope, $routeParams, $location, post, BlogPosts, Comments) {
+function PostController($scope, $routeParams, $location, post, BlogPosts, Comments, $window) {
+
 	$scope.post = post;
+
+	$window.scrollTo(0,0);
 
 	//for this need to inject BlogPosts
 	//$scope.post = BlogPosts.get({postId: $routeParams.id});
@@ -328,8 +333,11 @@ function EditController($scope, $location, BlogPosts, $routeParams) {
 
 //PAGE CONTROLLERS
 
-function PageController($scope, $routeParams, $location, page, BlogPage) {
+function PageController($scope, $routeParams, $location, page, BlogPage, $window) {
+
 	$scope.page = page;
+
+	$window.scrollTo(0,0);
 
 	$scope.edit = function() {
 		$location.path('/editpage/' + $routeParams.id);
