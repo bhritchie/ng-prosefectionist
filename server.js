@@ -48,12 +48,15 @@ var MongoStore = require('connect-mongo')(session);
 
 app.use(cookieParser());
 
+
+
 app.use(session({
 	secret: 'baggins',
 	store: new MongoStore({
-		db: 'blog',
-		host: '127.0.0.1',
-		port: 27017
+		url: dbconfig.url
+		//db: 'blog',
+		//host: '127.0.0.1',
+		//port: 27017
 	})
 }));
 

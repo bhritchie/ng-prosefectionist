@@ -1,9 +1,18 @@
 {
-	"name": "prosefectionist",
+	"name": "Prosefectionist",
+	"description": "A MEAN-stack SPA blogging platform with a RESTful back-end.",
+	"version": "0.2.0-2",
+	"author": "Brendan Ritchie",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bhritchie/ng-prosefectionist.git"
+	},
+	"scripts": {
+		"start": "node server"
+	},
 	"main": "server.js",
 	"dependencies": {
 		"express": "*",
-		"mongoose": "*",
 		"morgan": "*",
 		"jade": "*",
 		"monk": "*",
@@ -12,5 +21,9 @@
 		"express-session": "*",
 		"connect-mongo": "*",
 		"cookie-parser": "*"
+	},
+	"subdomain": "prosefectionist",
+	"engines": {
+		"node": "0.10.x"
 	}
 }
