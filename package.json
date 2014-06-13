@@ -1,7 +1,7 @@
 {
 	"name": "Prosefectionist",
 	"description": "A MEAN-stack SPA blogging platform with a RESTful back-end.",
-	"version": "0.2.0-2",
+	"version": "0.2.0-3",
 	"author": "Brendan Ritchie",
 	"repository": {
 		"type": "git",
